@@ -6,10 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Leaflet -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
@@ -33,8 +30,8 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
       font-family: system-ui, -apple-system, "SF Pro Display", sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -43,6 +40,7 @@
       overflow: hidden;
       display: flex;
       justify-content: center;
+      color: var(--txt-main); /* ВСЕГДА белый текст */
     }
 
     .app-shell {
@@ -69,21 +67,14 @@
       z-index: 1;
     }
 
-    /* ========= BOTTOM UI (как в фигме) ========= */
 
+    /* BOTTOM UI */
     .bottom-panel {
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      left: 0; right: 0; bottom: 0;
       padding: 10px 12px 16px;
       z-index: 3;
-      background: linear-gradient(
-        to top,
-        rgba(5, 6, 10, 0.98),
-        rgba(5, 6, 10, 0.7),
-        transparent
-      );
+      background: linear-gradient(to top, rgba(5,6,10,0.98), rgba(5,6,10,0.7), transparent);
       pointer-events: none;
     }
 
@@ -114,6 +105,7 @@
       font-weight: 600;
     }
 
+
     .search-row {
       display: flex;
       align-items: center;
@@ -137,6 +129,7 @@
       font-size: 13px;
     }
 
+
     .categories-row {
       display: flex;
       gap: 6px;
@@ -154,11 +147,11 @@
       color: var(--txt-soft);
       border: 1px solid rgba(255,255,255,0.1);
       font-size: 11px;
-      white-space: nowrap;
       display: flex;
       align-items: center;
       gap: 6px;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .chip.active {
@@ -175,6 +168,7 @@
       background: #fff3;
     }
 
+
     .banner {
       background: #46b6ff;
       color: #05253c;
@@ -188,24 +182,8 @@
       cursor: pointer;
     }
 
-    .banner-icon {
-      font-size: 18px;
-      margin-right: 6px;
-    }
 
-    .banner-title {
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-
-    .banner-text {
-      opacity: 0.85;
-    }
-
-    .banner-arrow {
-      font-size: 16px;
-    }
-
+    /* GUIDE CARD */
     .card-guide {
       background: var(--bg-card);
       border-radius: var(--radius-xl);
@@ -250,6 +228,7 @@
     .guide-title {
       font-size: 14px;
       font-weight: 600;
+      color: var(--txt-main); /* ЧИТАЕМО */
       margin-bottom: 2px;
     }
 
@@ -259,60 +238,21 @@
       margin-bottom: 8px;
     }
 
-    .guide-place-card {
-      background: var(--bg-card-soft);
-      border-radius: 18px;
-      padding: 10px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .guide-place-main {
-      font-size: 13px;
-    }
-
     .guide-place-name {
+      color: var(--txt-main);
       font-weight: 600;
       margin-bottom: 2px;
     }
 
-    .guide-place-address {
-      font-size: 11px;
-      color: var(--txt-soft);
-    }
 
-    .guide-place-meta {
-      text-align: right;
-      font-size: 11px;
-      color: var(--txt-soft);
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: #343542;
-      margin-bottom: 4px;
-    }
-
-    /* DETAIL CARD (по тапу на маркер/гид) */
-
+    /* DETAIL CARD */
     .place-detail-wrapper {
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      left: 0; right: 0; bottom: 0;
       padding: 0 12px 18px;
       z-index: 4;
       display: none;
-      background: linear-gradient(
-        to top,
-        rgba(5, 6, 10, 0.98),
-        rgba(5, 6, 10, 0.7),
-        transparent
-      );
+      background: linear-gradient(to top, rgba(5,6,10,0.98), rgba(5,6,10,0.7), transparent);
       pointer-events: none;
     }
 
@@ -332,45 +272,10 @@
       transform: translateY(0);
     }
 
-    .detail-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .detail-logo {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      background: #2a2b33;
-      object-fit: contain;
-    }
-
-    .detail-close {
-      font-size: 24px;
-      cursor: pointer;
-      opacity: 0.8;
-    }
-
     .detail-title {
+      color: var(--txt-main);
       font-size: 17px;
       font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .detail-category {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      margin-bottom: 6px;
-      color: #fff;
-    }
-
-    .detail-row {
-      font-size: 13px;
-      color: var(--txt-soft);
       margin-bottom: 4px;
     }
 
@@ -387,6 +292,7 @@
       border: none;
       cursor: pointer;
       font-size: 18px;
+      color: #000;
     }
   </style>
 </head>
@@ -398,14 +304,13 @@
 
   <button id="btnLocate" class="btn-locate">📍</button>
 
-  <!-- BOTTOM UI -->
   <div class="bottom-panel">
     <div class="bottom-inner">
 
+      <!-- УБРАЛ таб "Категории" -->
       <div class="tabs-row">
         <div class="tab active" data-tab="cashback">Ваш кэшбэк</div>
         <div class="tab" data-tab="nearby">Рядом с вами</div>
-        <div class="tab" data-tab="categories">Категории</div>
       </div>
 
       <div class="search-row">
@@ -426,14 +331,16 @@
         <div class="banner-arrow">›</div>
       </div>
 
+
       <div class="card-guide" id="guideCard">
+
         <div class="guide-steps" id="guideSteps"></div>
 
         <div class="guide-title" id="guideTitle"></div>
         <div class="guide-subtitle" id="guideSubtitle"></div>
 
         <div class="guide-place-card" id="guidePlaceCard">
-          <div class="guide-place-main">
+          <div>
             <div class="guide-place-name" id="placeName"></div>
             <div class="guide-place-address" id="placeAddress"></div>
           </div>
@@ -448,34 +355,36 @@
     </div>
   </div>
 
+
   <!-- DETAIL CARD -->
   <div class="place-detail-wrapper" id="placeDetailWrap">
     <div class="place-detail" id="placeDetail">
 
       <div class="detail-header">
-        <img id="detailLogo" class="detail-logo" />
-        <div id="detailClose" class="detail-close">×</div>
+        <img id="detailLogo" class="detail-logo"/>
+        <div id="detailClose" class="detail-close" style="font-size:24px;cursor:pointer;color:#fff;">×</div>
       </div>
 
       <div class="detail-title" id="detailTitle"></div>
-      <div class="detail-category" id="detailCategory"></div>
+      <div id="detailCategory" class="detail-category"></div>
 
       <div class="detail-row" id="detailAddress"></div>
       <div class="detail-row">Средний чек: <span id="detailAvgCheck"></span></div>
       <div class="detail-row">Кэшбэк: <span id="detailCashback"></span>%</div>
+
     </div>
   </div>
 
 </div>
 
-<script>
-/* ========= GLOBAL STATE ========= */
 
+<script>
 let allPlaces = [];
 let brandLogos = {};
 let averageZones = [];
 
 let activeCategory = "all";
+let heatMode = false;
 let activeTab = "cashback";
 
 let markersLayer = L.layerGroup();
@@ -487,24 +396,16 @@ let userMarker = null;
 
 let guidePlaces = [];
 let currentStepIndex = 0;
-let heatMode = false;
-
-/* ========= MAP INIT (CARTO DARK MATTER) ========= */
 
 const map = L.map("map").setView([55.75, 37.62], 11);
 
 L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-  {
-    maxZoom: 19,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> & <a href="https://carto.com/attributions">CARTO</a>'
-  }
+  { maxZoom: 19 }
 ).addTo(map);
 
 markersLayer.addTo(map);
 
-/* ========= HELPERS ========= */
 
 function catColor(c) {
   switch (c) {
@@ -522,7 +423,6 @@ function haversine(a,b,c,d){
   const dLon=((d-b)*Math.PI)/180;
   const la=a*Math.PI/180;
   const lc=c*Math.PI/180;
-
   const h=Math.sin(dLat/2)**2 + Math.cos(la)*Math.cos(lc)*Math.sin(dLon/2)**2;
   return R * 2 * Math.atan2(Math.sqrt(h),Math.sqrt(1-h));
 }
@@ -532,18 +432,16 @@ function distFmt(km){
   return km.toFixed(1)+" км";
 }
 
-/* ========= LOAD DATA ========= */
 
 async function loadData() {
-  const [pointsRes, brandsRes, zonesRes] = await Promise.all([
+  const [p,b,z] = await Promise.all([
     fetch("points.json"),
     fetch("brands.json"),
     fetch("average-zones.json")
   ]);
-
-  allPlaces = await pointsRes.json();
-  brandLogos = await brandsRes.json();
-  averageZones = await zonesRes.json();
+  allPlaces = await p.json();
+  brandLogos = await b.json();
+  averageZones = await z.json();
 
   initUI();
   buildHeatLayer();
@@ -553,13 +451,36 @@ async function loadData() {
 
 loadData();
 
-/* ========= UI INIT ========= */
 
-const TABS = [
-  {key: "cashback", label: "Ваш кэшбэк"},
-  {key: "nearby", label: "Рядом с вами"},
-  {key: "categories", label: "Категории"}
-];
+function initUI() {
+
+  document.querySelector("#searchInput").addEventListener("input", () => {
+    rebuildMarkers();
+    buildGuide();
+  });
+
+  document.querySelector("#btnLocate").onclick = locate;
+  document.querySelector("#detailClose").onclick = hideDetail;
+  document.querySelector("#bannerRain").onclick = toggleHeatMode;
+
+  renderCategoryChips();
+
+  document.querySelector("#guidePlaceCard").onclick = () => {
+    const p = guidePlaces[currentStepIndex];
+    if (!p) return;
+    showDetail(p);
+    map.flyTo([p.lat,p.lon],15,{duration:0.5});
+  };
+
+  document.querySelectorAll(".tab").forEach(t=>{
+    t.onclick = ()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      t.classList.add("active");
+      activeTab = t.dataset.tab;
+    };
+  });
+}
+
 
 const categoriesFilters = [
   {key:"all", label:"Все"},
@@ -569,65 +490,37 @@ const categoriesFilters = [
   {key:"Развлечения", label:"Развлечения"}
 ];
 
-function initUI() {
-  const tabsRow = document.querySelector(".tabs-row");
-  tabsRow.querySelectorAll(".tab").forEach(tab => {
-    tab.onclick = () => {
-      activeTab = tab.getAttribute("data-tab");
-      tabsRow.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-      tab.classList.add("active");
-      // На MVP вкладки визуальные, логика одна и та же
-    };
-  });
-
-  renderCategoryChips();
-
-  document.querySelector("#searchInput").addEventListener("input", () => {
-    rebuildMarkers();
-    buildGuide();
-  });
-
-  document.querySelector("#btnLocate").onclick = () => locate();
-
-  document.querySelector("#guidePlaceCard").onclick = () => {
-    const p = guidePlaces[currentStepIndex];
-    if (!p) return;
-    showDetail(p);
-    map.flyTo([p.lat,p.lon],15,{duration:0.5});
-  };
-
-  document.querySelector("#detailClose").onclick = hideDetail;
-
-  document.querySelector("#bannerRain").onclick = toggleHeatMode;
-}
-
 function renderCategoryChips() {
   const row = document.querySelector("#categoriesRow");
-  row.innerHTML = "";
-  categoriesFilters.forEach(cf => {
-    const chip = document.createElement("div");
-    chip.className = "chip" + (activeCategory === cf.key ? " active" : "");
-    const dot = document.createElement("div");
-    dot.className = "chip-dot";
-    dot.style.background = cf.key === "all" ? "#fff3" : catColor(cf.key);
+  row.innerHTML="";
+
+  categoriesFilters.forEach(cf=>{
+    const chip=document.createElement("div");
+    chip.className="chip"+(activeCategory===cf.key?" active":"");
+    const dot=document.createElement("div");
+    dot.className="chip-dot";
+    dot.style.background = cf.key==="all" ? "#fff3" : catColor(cf.key);
+
     chip.appendChild(dot);
     chip.appendChild(document.createTextNode(cf.label));
-    chip.onclick = () => {
-      activeCategory = cf.key;
+
+    chip.onclick=()=>{
+      activeCategory=cf.key;
       renderCategoryChips();
       rebuildMarkers();
       buildGuide();
     };
+
     row.appendChild(chip);
   });
 }
 
-/* ========= MARKERS / HEAT ========= */
 
 function filterPlacesBasic() {
   const q = document.querySelector("#searchInput").value.toLowerCase();
-  return allPlaces.filter(p => {
-    const okCat = activeCategory === "all" || p.category === activeCategory;
+
+  return allPlaces.filter(p=>{
+    const okCat = activeCategory==="all" || p.category===activeCategory;
     const okQ = !q || p.name.toLowerCase().includes(q);
     return okCat && okQ;
   });
@@ -637,32 +530,29 @@ function rebuildMarkers() {
   markersLayer.clearLayers();
   markerById.clear();
 
-  if (heatMode) return; // когда heatmap, точки скрываем
+  if (heatMode) return;
 
   const filtered = filterPlacesBasic();
   filtered.forEach(createMarker);
 }
 
 function createMarker(p) {
-  const icon = L.divIcon({
-    html: `<div style="
-      width:14px;height:14px;border-radius:999px;
-      background:${catColor(p.category)};
-      border:2px solid #05060a;
-    "></div>`,
+  const icon=L.divIcon({
+    html:`<div style="width:14px;height:14px;border-radius:999px;background:${catColor(p.category)};border:2px solid #05060a;"></div>`,
     className:"",
     iconSize:[16,16],
     iconAnchor:[8,8]
   });
 
   const m = L.marker([p.lat,p.lon],{icon}).addTo(markersLayer);
-  markerById.set(p.id, m);
+  markerById.set(p.id,m);
 
-  m.on("click", () => {
+  m.on("click",()=>{
     showDetail(p);
     map.flyTo([p.lat,p.lon],15,{duration:0.5});
   });
 }
+
 
 function buildHeatLayer() {
   heatLayer.clearLayers();
@@ -670,10 +560,11 @@ function buildHeatLayer() {
   averageZones.forEach(z => {
     const color =
       z.value >= 35 ? "#ff3859" :
-      z.value >= 25 ? "#ff9f30" : "#29d9a6";
+      z.value >= 25 ? "#ff9f30" :
+                      "#29d9a6";
 
     const circle = L.circle([z.lat,z.lon],{
-      radius: 400 + z.value * 6,
+      radius: 400 + z.value*6,
       color,
       fillColor: color,
       fillOpacity: 0.18,
@@ -684,29 +575,38 @@ function buildHeatLayer() {
   });
 }
 
+
 function toggleHeatMode() {
   heatMode = !heatMode;
 
+  const steps = document.querySelector("#guideSteps");
+
   if (heatMode) {
+
     map.addLayer(heatLayer);
     markersLayer.clearLayers();
-    document.querySelector("#guideTitle").textContent =
-      "Средний кэшбэк по районам";
-    document.querySelector("#guideSubtitle").textContent =
-      "Кликай по кругам на карте, чтобы посмотреть средний кэшбэк.";
-    document.querySelector("#placeName").textContent = "";
-    document.querySelector("#placeAddress").textContent = "";
-    document.querySelector("#placeCategory").textContent = "";
-    document.querySelector("#placeDistance").textContent = "";
-    document.querySelector("#placeAvgCheck").textContent = "";
+
+    steps.style.display = "none";  /* ВАЖНО — убрать прогресс-бар */
+
+    document.querySelector("#guideTitle").textContent = "Средний кэшбэк по районам";
+    document.querySelector("#guideSubtitle").textContent = "Кликай по кругам на карте, чтобы посмотреть средний кэшбэк.";
+
+    document.querySelector("#placeName").textContent="";
+    document.querySelector("#placeAddress").textContent="";
+    document.querySelector("#placeCategory").textContent="";
+    document.querySelector("#placeDistance").textContent="";
+    document.querySelector("#placeAvgCheck").textContent="";
+
   } else {
     map.removeLayer(heatLayer);
+
+    steps.style.display = "flex"; /* вернуть шаги */
+
     rebuildMarkers();
     buildGuide();
   }
 }
 
-/* ========= GUIDE ========= */
 
 function buildGuide() {
   if (heatMode) return;
@@ -714,10 +614,10 @@ function buildGuide() {
   const baseLat = userPosition ? userPosition.lat : 55.75;
   const baseLon = userPosition ? userPosition.lon : 37.62;
 
-  const filtered = filterPlacesBasic().map(p => ({
+  const filtered = filterPlacesBasic().map(p=>({
     ...p,
     dist: haversine(baseLat,baseLon,p.lat,p.lon)
-  })).sort((a,b) => a.dist - b.dist);
+  })).sort((a,b)=>a.dist-b.dist);
 
   guidePlaces = filtered.slice(0,5);
   currentStepIndex = 0;
@@ -726,38 +626,38 @@ function buildGuide() {
 
 function renderGuide() {
   const steps = document.querySelector("#guideSteps");
-  steps.innerHTML = "";
+  steps.innerHTML="";
 
   guidePlaces.forEach((p,i)=>{
-    const s = document.createElement("div");
-    s.className = "step" + (i === currentStepIndex ? " active" : "");
-    s.textContent = i+1;
-    s.onclick = () => {
-      currentStepIndex = i;
+    const s=document.createElement("div");
+    s.className="step"+(i===currentStepIndex?" active":"");
+    s.textContent=i+1;
+
+    s.onclick=()=>{
+      currentStepIndex=i;
       renderGuide();
       map.flyTo([p.lat,p.lon],15,{duration:0.5});
       showDetail(p);
     };
+
     steps.appendChild(s);
-    if (i < guidePlaces.length - 1) {
-      const line = document.createElement("div");
-      line.className = "step-line";
+
+    if (i<guidePlaces.length-1) {
+      const line=document.createElement("div");
+      line.className="step-line";
       steps.appendChild(line);
     }
   });
 
   const p = guidePlaces[currentStepIndex];
   if (!p) {
-    document.querySelector("#guideTitle").textContent = "Нет подходящих мест";
-    document.querySelector("#guideSubtitle").textContent =
-      "Попробуйте изменить фильтры или поиск.";
+    document.querySelector("#guideTitle").textContent="Нет подходящих мест";
+    document.querySelector("#guideSubtitle").textContent="Попробуйте изменить фильтры или поиск.";
     return;
   }
 
-  document.querySelector("#guideTitle").textContent =
-    `Шаг ${currentStepIndex+1}. Посетите ${p.name}`;
-  document.querySelector("#guideSubtitle").textContent =
-    "Мы подобрали места с кэшбэком рядом с вами.";
+  document.querySelector("#guideTitle").textContent = `Шаг ${currentStepIndex+1}. Посетите ${p.name}`;
+  document.querySelector("#guideSubtitle").textContent = "Мы подобрали места с кэшбэком рядом с вами.";
 
   document.querySelector("#placeName").textContent = p.name;
   document.querySelector("#placeAddress").textContent = p.address;
@@ -766,52 +666,54 @@ function renderGuide() {
   document.querySelector("#placeAvgCheck").textContent = `~${p.avgCheck} ₽`;
 }
 
-/* ========= DETAIL CARD ========= */
 
 function showDetail(p) {
-  const wrap = document.querySelector("#placeDetailWrap");
-  const card = document.querySelector("#placeDetail");
+  const wrap=document.querySelector("#placeDetailWrap");
+  const card=document.querySelector("#placeDetail");
 
-  const logoPath = brandLogos[p.brand] || "logos/default.png";
+  document.querySelector("#detailLogo").src = brandLogos[p.brand] || "logos/default.png";
 
-  document.querySelector("#detailLogo").src = logoPath;
   document.querySelector("#detailTitle").textContent = p.name;
   document.querySelector("#detailCategory").textContent = p.category;
   document.querySelector("#detailCategory").style.background = catColor(p.category);
   document.querySelector("#detailAddress").textContent = p.address;
-  document.querySelector("#detailAvgCheck").textContent = p.avgCheck + " ₽";
+  document.querySelector("#detailAvgCheck").textContent = p.avgCheck+" ₽";
   document.querySelector("#detailCashback").textContent = p.cashback;
 
-  wrap.style.display = "block";
-  setTimeout(() => card.classList.add("show"), 10);
+  wrap.style.display="block";
+  setTimeout(()=>card.classList.add("show"),10);
 }
 
 function hideDetail() {
-  const wrap = document.querySelector("#placeDetailWrap");
-  const card = document.querySelector("#placeDetail");
+  const wrap=document.querySelector("#placeDetailWrap");
+  const card=document.querySelector("#placeDetail");
+
   card.classList.remove("show");
-  setTimeout(() => wrap.style.display = "none", 200);
+  setTimeout(()=>wrap.style.display="none",200);
 }
 
-/* ========= GEOLOCATION ========= */
 
 function locate() {
   if (!navigator.geolocation) return;
-  navigator.geolocation.getCurrentPosition(pos => {
-    userPosition = {
-      lat: pos.coords.latitude,
-      lon: pos.coords.longitude
+
+  navigator.geolocation.getCurrentPosition(pos=>{
+    userPosition={
+      lat:pos.coords.latitude,
+      lon:pos.coords.longitude
     };
+
     if (!userMarker) {
       userMarker = L.circleMarker([userPosition.lat,userPosition.lon],{
-        radius: 6,
-        color: "#00ffb3",
-        fillOpacity: 0.9
+        radius:6,
+        color:"#00ffb3",
+        fillOpacity:0.9
       }).addTo(map);
-    } else {
+    }
+    else {
       userMarker.setLatLng([userPosition.lat,userPosition.lon]);
     }
-    map.setView([userPosition.lat,userPosition.lon], 13);
+
+    map.setView([userPosition.lat,userPosition.lon],13);
     buildGuide();
   });
 }
