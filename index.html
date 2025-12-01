@@ -16,11 +16,16 @@
     :root {
       --bg-main: #05060a;
       --bg-card: #15161c;
+      --bg-card-soft: #1f2027;
       --bg-tab: #1f2027;
       --txt-main: #ffffff;
       --txt-soft: #c4c4d0;
       --txt-muted: #8f90a0;
       --radius-xl: 26px;
+      --accent-red: #ff3859;
+      --accent-orange: #ff9f30;
+      --accent-lime: #29d9a6;
+      --accent-purple: #7c5cff;
     }
 
     * {
@@ -63,42 +68,12 @@
       z-index: 1;
     }
 
-    /* чтобы круги точно были поверх тайлов */
-    .leaflet-overlay-pane {
-      z-index: 30 !important;
-    }
+    /* чтобы круги heatmap точно были поверх */
     .leaflet-overlay-pane svg {
-      z-index: 9999 !important;
-    }
-    .leaflet-marker-pane {
-      z-index: 40 !important;
-    }
-    /* плавное проявление кругов */
-    .leaflet-interactive {
-      transition: fill-opacity 0.35s ease;
+      z-index: 400 !important;
     }
 
-    /* ========= КНОПКА НАЗАД В РЕЖИМЕ ОСАДКОВ ========= */
-
-    .back-button {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      z-index: 50;
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      background: rgba(0,0,0,0.7);
-      color: #ffffff;
-      font-size: 20px;
-      display: none; /* показываем только в heatMode */
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* ========= НИЖНЯЯ ПАНЕЛЬ ========= */
+    /* ========= BOTTOM UI ========= */
 
     .bottom-panel {
       position: absolute;
@@ -169,8 +144,9 @@
       font-size: 13px;
     }
 
+    /* чипы категорий убираем из интерфейса */
     .categories-row {
-      display: none; /* чипы спрятаны в MVP */
+      display: none;
     }
 
     .banner {
@@ -396,8 +372,7 @@
       margin-bottom: 4px;
     }
 
-    /* Locate */
-
+    /* Locate button */
     .btn-locate {
       position: absolute;
       right: 16px;
@@ -413,7 +388,7 @@
       color: #fff;
     }
 
-    /* Панель категорий кешбэка */
+    /* Панель категорий кешбэка (подкладка) */
 
     .cashback-panel-backdrop {
       position: absolute;
@@ -448,13 +423,11 @@
       font-size: 13px;
       color: #fff;
       border-bottom: 1px solid rgba(255,255,255,0.06);
-      cursor: pointer;
     }
 
     .cashback-item:last-child {
       border-bottom: none;
       padding-bottom: 0;
-      cursor: default;
     }
 
     .cashback-main {
@@ -505,9 +478,6 @@
 <div class="app-shell">
 
   <div id="map"></div>
-
-  <!-- Кнопка "назад" для режима осадков -->
-  <button id="btnBackHeat" class="back-button">←</button>
 
   <button id="btnLocate" class="btn-locate">▲</button>
 
@@ -622,10 +592,13 @@
 </div>
 
 <script>
+/* ========= GLOBAL STATE ========= */
+
 let allPlaces = [];
 let brandLogos = {};
 let averageZones = [];
 
+let activeCategory = "all";
 let activeTab = "cashback";
 let activeCashbackCategory = "fastfood";
 
@@ -640,6 +613,8 @@ let guidePlaces = [];
 let currentStepIndex = 0;
 let heatMode = false;
 
+/* ========= MAP INIT ========= */
+
 const map = L.map("map").setView([55.75, 37.62], 11);
 
 L.tileLayer(
@@ -651,6 +626,8 @@ L.tileLayer(
 ).addTo(map);
 
 markersLayer.addTo(map);
+
+/* ========= HELPERS ========= */
 
 function catColor(c) {
   switch (c) {
@@ -671,18 +648,21 @@ function haversine(a,b,c,d){
   const h=Math.sin(dLat/2)**2 + Math.cos(la)*Math.cos(lc)*Math.sin(dLon/2)**2;
   return R * 2 * Math.atan2(Math.sqrt(h),Math.sqrt(1-h));
 }
+
 function distFmt(km){
   if(km<1) return Math.round(km*1000)+" м";
   return km.toFixed(1)+" км";
 }
 
-/* LOAD DATA */
+/* ========= LOAD DATA ========= */
+
 async function loadData() {
   const [p, b, z] = await Promise.all([
     fetch("points.json"),
     fetch("brands.json"),
     fetch("average-zones.json")
   ]);
+
   allPlaces = await p.json();
   brandLogos = await b.json();
   averageZones = await z.json();
@@ -692,10 +672,13 @@ async function loadData() {
   rebuildMarkers();
   buildGuide();
 }
+
 loadData();
 
-/* UI INIT */
+/* ========= UI INIT ========= */
+
 function initUI() {
+  // tabs: "Ваш кэшбэк" открывает окно, "Рядом с вами" просто меняет режим
   document.querySelectorAll(".tab").forEach(tab => {
     tab.onclick = () => {
       const key = tab.getAttribute("data-tab");
@@ -719,19 +702,19 @@ function initUI() {
   });
 
   document.querySelector("#btnLocate").onclick = () => locate();
+
   document.querySelector("#guidePlaceCard").onclick = () => {
     const p = guidePlaces[currentStepIndex];
     if (!p) return;
     showDetail(p);
     map.flyTo([p.lat,p.lon],15,{duration:0.5});
   };
+
   document.querySelector("#detailClose").onclick = hideDetail;
+
   document.querySelector("#bannerRain").onclick = toggleHeatMode;
 
-  document.querySelector("#btnBackHeat").onclick = () => {
-    if (heatMode) exitHeatMode();
-  };
-
+  // cashback panel
   const backdrop = document.querySelector("#cashbackBackdrop");
   backdrop.addEventListener("click", e => {
     if (e.target === backdrop) closeCashbackPanel();
@@ -742,20 +725,23 @@ function initUI() {
       document.querySelectorAll(".cashback-item[data-cb]").forEach(i=>i.classList.remove("active"));
       item.classList.add("active");
       activeCashbackCategory = item.getAttribute("data-cb");
-      // логика по категориям кешбэка может быть привязана к брендам
+      // Тут можно привязать к брендам/типам, пока только визуально
     };
   });
 }
 
-/* CASHBACK PANEL */
+/* ========= CASHBACK PANEL ========= */
+
 function openCashbackPanel() {
   document.querySelector("#cashbackBackdrop").style.display = "flex";
 }
+
 function closeCashbackPanel() {
   document.querySelector("#cashbackBackdrop").style.display = "none";
 }
 
-/* FILTERED PLACES */
+/* ========= FILTERED PLACES ========= */
+
 function filterPlacesBasic() {
   const q = document.querySelector("#searchInput").value.toLowerCase();
   return allPlaces.filter(p => {
@@ -764,11 +750,13 @@ function filterPlacesBasic() {
   });
 }
 
-/* MARKERS */
+/* ========= MARKERS / HEAT ========= */
+
 function rebuildMarkers() {
   markersLayer.clearLayers();
   markerById.clear();
   if (heatMode) return;
+
   const filtered = filterPlacesBasic();
   filtered.forEach(createMarker);
 }
@@ -784,15 +772,16 @@ function createMarker(p) {
     iconSize:[16,16],
     iconAnchor:[8,8]
   });
+
   const m = L.marker([p.lat,p.lon],{icon}).addTo(markersLayer);
   markerById.set(p.id, m);
+
   m.on("click", () => {
     showDetail(p);
     map.flyTo([p.lat,p.lon],15,{duration:0.5});
   });
 }
 
-/* HEATMAP */
 function buildHeatLayer() {
   heatLayer.clearLayers();
   averageZones.forEach(z => {
@@ -800,21 +789,14 @@ function buildHeatLayer() {
       z.value >= 35 ? "#ff3859" :
       z.value >= 25 ? "#ff9f30" : "#29d9a6";
 
-    const circle = L.circle([z.lat,z.lon],{
+    L.circle([z.lat,z.lon],{
       radius: 900 + z.value * 20,
       color,
       fillColor: color,
-      fillOpacity: 0.0,  // стартуем с нуля
+      fillOpacity: 0.28,
       weight: 1.2
-    }).addTo(heatLayer);
-
-    const label = (z.name || "Район") + " — " + z.value + " ₽";
-    circle.bindPopup(label);
-
-    // плавное проявление
-    setTimeout(() => {
-      circle.setStyle({fillOpacity: 0.28});
-    }, 50);
+    }).addTo(heatLayer)
+      .bindPopup(`Средний кэшбэк: ${z.value} ₽`);
   });
 }
 
@@ -826,14 +808,13 @@ function enterHeatMode() {
   document.querySelector(".tabs-row").style.display = "none";
   document.querySelector(".search-row").style.display = "none";
   document.querySelector("#bannerRain").style.display = "none";
+
   document.querySelector("#guideSteps").style.display = "none";
   document.querySelector("#guidePlaceCard").style.display = "none";
 
   document.querySelector("#guideTitle").textContent = "Средний кешбэк по районам";
   document.querySelector("#guideSubtitle").textContent =
     "Нажмите на область, чтобы увидеть размер среднего кешбэка.";
-
-  document.querySelector("#btnBackHeat").style.display = "flex";
 }
 
 function exitHeatMode() {
@@ -845,20 +826,24 @@ function exitHeatMode() {
   document.querySelector(".tabs-row").style.display = "flex";
   document.querySelector(".search-row").style.display = "flex";
   document.querySelector("#bannerRain").style.display = "flex";
+
   document.querySelector("#guideSteps").style.display = "flex";
   document.querySelector("#guidePlaceCard").style.display = "flex";
-
-  document.querySelector("#btnBackHeat").style.display = "none";
 }
 
 function toggleHeatMode() {
-  if (!heatMode) enterHeatMode();
-  else exitHeatMode();
+  if (!heatMode) {
+    enterHeatMode();
+  } else {
+    exitHeatMode();
+  }
 }
 
-/* GUIDE — только рестораны */
+/* ========= GUIDE (ТОЛЬКО РЕСТОРАНЫ) ========= */
+
 function buildGuide() {
   if (heatMode) return;
+
   const baseLat = userPosition ? userPosition.lat : 55.75;
   const baseLon = userPosition ? userPosition.lon : 37.62;
 
@@ -923,7 +908,8 @@ function renderGuide() {
   document.querySelector("#placeAvgCheck").textContent = `~${p.avgCheck} ₽`;
 }
 
-/* DETAIL CARD */
+/* ========= DETAIL CARD ========= */
+
 function showDetail(p) {
   const wrap = document.querySelector("#placeDetailWrap");
   const card = document.querySelector("#placeDetail");
@@ -941,6 +927,7 @@ function showDetail(p) {
   wrap.style.display = "block";
   setTimeout(() => card.classList.add("show"), 10);
 }
+
 function hideDetail() {
   const wrap = document.querySelector("#placeDetailWrap");
   const card = document.querySelector("#placeDetail");
@@ -948,7 +935,8 @@ function hideDetail() {
   setTimeout(() => wrap.style.display = "none", 200);
 }
 
-/* GEOLOCATE */
+/* ========= GEOLOCATION ========= */
+
 function locate() {
   if (!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(pos => {
