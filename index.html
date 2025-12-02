@@ -258,6 +258,7 @@
       align-items: center;
       cursor: pointer;
       transition: 0.2s ease;
+      gap: 10px;
     }
 
     .guide-place-card:hover {
@@ -274,6 +275,21 @@
     .guide-place-address {
       font-size: 11px;
       color: var(--txt-soft);
+    }
+
+    .guide-next-btn {
+      background:#2b2c33;
+      border:none;
+      width:32px;
+      height:32px;
+      border-radius:999px;
+      color:#ffffff;
+      font-size:18px;
+      cursor:pointer;
+      flex-shrink:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
 
     /* DETAIL CARD */
@@ -556,15 +572,16 @@
         <div class="guide-subtitle" id="guideSubtitle"></div>
 
         <div class="guide-place-card" id="guidePlaceCard">
-          <div>
+          <div style="flex:1;">
             <div class="guide-place-name" id="placeName"></div>
             <div class="guide-place-address" id="placeAddress"></div>
           </div>
-          <div style="text-align:right;">
-            <div id="placeCategory" style="font-size:11px;color:var(--txt-soft);"></div>
-            <div id="placeDistance" style="font-size:11px;color:var(--txt-soft);"></div>
-            <div id="placeAvgCheck" style="font-size:11px;color:var(--txt-soft);"></div>
+          <div style="text-align:right;font-size:11px;color:var(--txt-soft);">
+            <div id="placeCategory"></div>
+            <div id="placeDistance"></div>
+            <div id="placeAvgCheck"></div>
           </div>
+          <button class="guide-next-btn" id="guideNextBtn">✓</button>
         </div>
       </div>
 
@@ -756,7 +773,6 @@ const categoriesFilters = [
 
 function initUI() {
   const tabsRow = document.querySelector(".tabs-row");
-  const cashbackTab = tabsRow.querySelector('[data-tab="cashback"]');
 
   tabsRow.querySelectorAll(".tab").forEach(tab => {
     tab.onclick = () => {
@@ -769,7 +785,6 @@ function initUI() {
       if (key === "cashback") {
         openCashbackSheet();
       }
-      // "Рядом с вами" на MVP отдельной логики не имеет
     };
   });
 
@@ -782,11 +797,20 @@ function initUI() {
 
   document.querySelector("#btnLocate").onclick = () => locate();
 
-  document.querySelector("#guidePlaceCard").onclick = () => {
+  document.querySelector("#guidePlaceCard").onclick = (e) => {
+    // чтобы нажимая на галочку не открывать карточку
+    if (e.target.id === "guideNextBtn") return;
     const p = guidePlaces[currentStepIndex];
     if (!p) return;
     showDetail(p);
     map.flyTo([p.lat,p.lon],15,{duration:0.5});
+  };
+
+  document.querySelector("#guideNextBtn").onclick = () => {
+    if (currentStepIndex < guidePlaces.length - 1) {
+      currentStepIndex++;
+      renderGuide();
+    }
   };
 
   document.querySelector("#detailClose").onclick = hideDetail;
@@ -837,7 +861,6 @@ function closeCashbackSheet() {
 }
 
 function applyCashbackFilter(itemEl) {
-  // визуально отмечаем
   document.querySelectorAll(".cashback-filter-item")
     .forEach(i => i.classList.remove("active"));
   itemEl.classList.add("active");
@@ -958,10 +981,14 @@ function buildGuide() {
   const baseLat = userPosition ? userPosition.lat : 55.75;
   const baseLon = userPosition ? userPosition.lon : 37.62;
 
-  const filtered = filterPlacesBasic().map(p => ({
-    ...p,
-    dist: haversine(baseLat,baseLon,p.lat,p.lon)
-  })).sort((a,b) => a.dist - b.dist);
+  // гид всегда только по ресторанам и кафе
+  const filtered = allPlaces
+    .filter(p => p.category === "Рестораны и кафе")
+    .map(p => ({
+      ...p,
+      dist: haversine(baseLat, baseLon, p.lat, p.lon)
+    }))
+    .sort((a,b) => a.dist - b.dist);
 
   guidePlaces = filtered.slice(0,5);
   currentStepIndex = 0;
@@ -970,6 +997,10 @@ function buildGuide() {
 
 function renderGuide() {
   const steps = document.querySelector("#guideSteps");
+  const titleEl = document.querySelector("#guideTitle");
+  const subEl = document.querySelector("#guideSubtitle");
+  const nextBtn = document.querySelector("#guideNextBtn");
+
   steps.innerHTML = "";
 
   guidePlaces.forEach((p,i)=>{
@@ -983,31 +1014,36 @@ function renderGuide() {
       showDetail(p);
     };
     steps.appendChild(s);
-    if (i < guidePlaces.length - 1) {
-      const line = document.createElement("div");
-      line.className = "step-line";
-      steps.appendChild(line);
-    }
   });
 
   const p = guidePlaces[currentStepIndex];
   if (!p) {
-    document.querySelector("#guideTitle").textContent = "Нет подходящих мест";
-    document.querySelector("#guideSubtitle").textContent =
-      "Попробуйте изменить фильтры или поиск.";
+    titleEl.textContent = "Гид по району";
+    subEl.textContent = "Нет подходящих мест. Попробуйте включить геолокацию.";
+    document.querySelector("#placeName").textContent = "";
+    document.querySelector("#placeAddress").textContent = "";
+    document.querySelector("#placeCategory").textContent = "";
+    document.querySelector("#placeDistance").textContent = "";
+    document.querySelector("#placeAvgCheck").textContent = "";
+    nextBtn.style.display = "none";
     return;
   }
 
-  document.querySelector("#guideTitle").textContent =
-    `Шаг ${currentStepIndex+1}. Посетите ${p.name}`;
-  document.querySelector("#guideSubtitle").textContent =
-    "Мы подобрали места с кэшбэком рядом с вами.";
+  titleEl.textContent = "Гид по району";
+  subEl.textContent = `Шаг ${currentStepIndex+1} из ${guidePlaces.length}`;
 
   document.querySelector("#placeName").textContent = p.name;
   document.querySelector("#placeAddress").textContent = p.address;
   document.querySelector("#placeCategory").textContent = p.category;
   document.querySelector("#placeDistance").textContent = distFmt(p.dist);
   document.querySelector("#placeAvgCheck").textContent = `~${p.avgCheck} ₽`;
+
+  // скрываем галочку на последнем шаге
+  if (currentStepIndex === guidePlaces.length - 1) {
+    nextBtn.style.display = "none";
+  } else {
+    nextBtn.style.display = "flex";
+  }
 }
 
 /* ========= DETAIL CARD ========= */
