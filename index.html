@@ -43,7 +43,7 @@
       overflow: hidden;
       display: flex;
       justify-content: center;
-      color: var(--txt-main); /* весь текст по умолчанию белый */
+      color: var(--txt-main);
     }
 
     .app-shell {
@@ -189,11 +189,6 @@
       cursor: pointer;
     }
 
-    .banner-icon {
-      font-size: 18px;
-      margin-right: 6px;
-    }
-
     .banner-title {
       font-weight: 600;
       margin-bottom: 2px;
@@ -203,15 +198,14 @@
       opacity: 0.9;
     }
 
-    .banner-arrow {
-      font-size: 16px;
-    }
+    /* GUIDE CARD */
 
     .card-guide {
       background: var(--bg-card);
       border-radius: var(--radius-xl);
       padding: 12px 14px;
       border: 1px solid rgba(255,255,255,0.05);
+      transition: 0.3s ease;
     }
 
     .guide-steps {
@@ -242,12 +236,6 @@
       font-weight: 600;
     }
 
-    .step-line {
-      flex: 1;
-      height: 1.5px;
-      background: rgba(255,255,255,0.2);
-    }
-
     .guide-title {
       font-size: 14px;
       font-weight: 600;
@@ -269,16 +257,18 @@
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
+      transition: 0.2s ease;
     }
 
-    .guide-place-main {
-      font-size: 13px;
+    .guide-place-card:hover {
+      background: #2a2b35;
     }
 
     .guide-place-name {
+      font-size: 14px;
       font-weight: 600;
-      margin-bottom: 2px;
       color: var(--txt-main);
+      margin-bottom: 2px;
     }
 
     .guide-place-address {
@@ -286,27 +276,11 @@
       color: var(--txt-soft);
     }
 
-    .guide-place-meta {
-      text-align: right;
-      font-size: 11px;
-      color: var(--txt-soft);
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: #343542;
-      margin-bottom: 4px;
-    }
-
-    /* ========= DETAIL CARD ========= */
+    /* DETAIL CARD */
 
     .place-detail-wrapper {
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      left: 0; right: 0; bottom: 0;
       padding: 0 12px 18px;
       z-index: 4;
       display: none;
@@ -347,10 +321,9 @@
       width: 50px;
       height: 50px;
       border-radius: 14px;
-      background: #20212a;
       object-fit: contain;
+      background: #20212a;
       padding: 6px;
-      border: 1px solid rgba(255,255,255,0.05);
     }
 
     .detail-close {
@@ -358,14 +331,14 @@
       font-size: 26px;
       opacity: 0.7;
       cursor: pointer;
-      color: #ffffff;
+      color: #fff;
     }
 
     .detail-title {
       font-size: 18px;
       font-weight: 600;
       margin-bottom: 4px;
-      color: #ffffff;
+      color: #fff;
     }
 
     .detail-category {
@@ -376,14 +349,7 @@
       margin-top: 4px;
       margin-bottom: 4px;
       font-weight: 600;
-      color: #000000; /* на яркой плашке */
-    }
-
-    .detail-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 4px;
+      color: #000;
     }
 
     .detail-row {
@@ -451,13 +417,13 @@
 
       <div class="banner" id="bannerRain">
         <div style="display:flex;align-items:flex-start;">
-          <div class="banner-icon">💧</div>
+          <div style="font-size:18px;margin-right:6px;">💧</div>
           <div>
             <div class="banner-title">Ожидаются осадки в виде кэшбэка</div>
             <div class="banner-text">Нажмите, чтобы посмотреть средний кэшбэк по районам</div>
           </div>
         </div>
-        <div class="banner-arrow">›</div>
+        <div style="font-size:16px;">›</div>
       </div>
 
       <div class="card-guide" id="guideCard">
@@ -467,14 +433,14 @@
         <div class="guide-subtitle" id="guideSubtitle"></div>
 
         <div class="guide-place-card" id="guidePlaceCard">
-          <div class="guide-place-main">
+          <div>
             <div class="guide-place-name" id="placeName"></div>
             <div class="guide-place-address" id="placeAddress"></div>
           </div>
-          <div class="guide-place-meta">
-            <div class="tag" id="placeCategory"></div>
-            <div id="placeDistance"></div>
-            <div id="placeAvgCheck"></div>
+          <div style="text-align:right;">
+            <div id="placeCategory" style="font-size:11px;color:var(--txt-soft);"></div>
+            <div id="placeDistance" style="font-size:11px;color:var(--txt-soft);"></div>
+            <div id="placeAvgCheck" style="font-size:11px;color:var(--txt-soft);"></div>
           </div>
         </div>
       </div>
@@ -539,9 +505,7 @@ const map = L.map("map").setView([55.75, 37.62], 11);
 
 L.tileLayer(
   "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-  {
-    maxZoom: 19
-  }
+  { maxZoom: 19 }
 ).addTo(map);
 
 markersLayer.addTo(map);
@@ -612,7 +576,6 @@ function initUI() {
       activeTab = tab.getAttribute("data-tab");
       tabsRow.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
       tab.classList.add("active");
-      // логика вкладок на MVP одинаковая
     };
   });
 
@@ -673,7 +636,7 @@ function rebuildMarkers() {
   markersLayer.clearLayers();
   markerById.clear();
 
-  if (heatMode) return; // когда heatmap, точки скрываем
+  if (heatMode) return;
 
   const filtered = filterPlacesBasic();
   filtered.forEach(createMarker);
@@ -724,26 +687,33 @@ function toggleHeatMode() {
   heatMode = !heatMode;
 
   const stepsEl = document.querySelector("#guideSteps");
+  const guideCard = document.querySelector("#guideCard");
+  const placeCard = document.querySelector("#guidePlaceCard");
 
   if (heatMode) {
     map.addLayer(heatLayer);
     markersLayer.clearLayers();
 
-    if (stepsEl) stepsEl.style.display = "none"; // скрываем прогресс-бар
+    if (stepsEl) stepsEl.style.display = "none";
+
+    guideCard.style.padding = "16px";
+    guideCard.style.borderRadius = "20px";
 
     document.querySelector("#guideTitle").textContent =
       "Средний кэшбэк по районам";
     document.querySelector("#guideSubtitle").textContent =
       "Кликай по кругам на карте, чтобы посмотреть средний кэшбэк.";
-    document.querySelector("#placeName").textContent = "";
-    document.querySelector("#placeAddress").textContent = "";
-    document.querySelector("#placeCategory").textContent = "";
-    document.querySelector("#placeDistance").textContent = "";
-    document.querySelector("#placeAvgCheck").textContent = "";
+
+    placeCard.style.display = "none";
   } else {
     map.removeLayer(heatLayer);
 
-    if (stepsEl) stepsEl.style.display = "flex"; // возвращаем прогресс-бар
+    if (stepsEl) stepsEl.style.display = "flex";
+
+    placeCard.style.display = "flex";
+
+    guideCard.style.padding = "12px 14px";
+    guideCard.style.borderRadius = "var(--radius-xl)";
 
     rebuildMarkers();
     buildGuide();
@@ -823,7 +793,7 @@ function showDetail(p) {
   const catEl = document.querySelector("#detailCategory");
   catEl.textContent = p.category;
   catEl.style.background = catColor(p.category);
-  catEl.style.color = "#000"; // читаемый текст на ярлом фоне
+  catEl.style.color = "#000";
   document.querySelector("#detailAddress").textContent = p.address;
   document.querySelector("#detailAvgCheck").textContent = p.avgCheck + " ₽";
   document.querySelector("#detailCashback").textContent = p.cashback;
@@ -862,5 +832,6 @@ function locate() {
   });
 }
 </script>
+
 </body>
 </html>
