@@ -389,6 +389,129 @@
       cursor: pointer;
       font-size: 18px;
     }
+
+    /* ========== CASHBACK BOTTOM SHEET ========== */
+
+    .cashback-sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    .cashback-sheet {
+      width: 100%;
+      max-width: 430px;
+      background: #111217;
+      border-radius: 26px 26px 0 0;
+      padding: 16px 16px 20px;
+      box-shadow: 0 -14px 40px rgba(0,0,0,0.8);
+    }
+
+    .cashback-sheet-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .cashback-sheet-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .cashback-sheet-close {
+      margin-left: auto;
+      border: none;
+      background: transparent;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+
+    .cashback-filter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cashback-filter-item {
+      background: #181920;
+      border-radius: 20px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .cashback-filter-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cashback-filter-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: #262730;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .cashback-filter-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cashback-filter-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .cashback-filter-subtitle {
+      font-size: 11px;
+      color: var(--txt-muted);
+    }
+
+    .cashback-filter-radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cashback-filter-radio-inner {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: transparent;
+    }
+
+    .cashback-filter-item.active .cashback-filter-radio-inner {
+      background: #ff4a50;
+    }
+
+    .cashback-filter-footnote {
+      margin-top: 6px;
+      background: linear-gradient(135deg, #f0f0f0, #d8d8d8);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 11px;
+      color: #333;
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -471,6 +594,68 @@
           <div class="detail-badge">
             Кэшбэк: <span id="detailCashback"></span>%
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASHBACK FILTER SHEET -->
+  <div class="cashback-sheet-backdrop" id="cashbackSheetBackdrop">
+    <div class="cashback-sheet">
+      <div class="cashback-sheet-header">
+        <div class="cashback-sheet-title">Что покажем?</div>
+        <button class="cashback-sheet-close" id="cashbackSheetClose">×</button>
+      </div>
+
+      <div class="cashback-filter-list">
+        <div class="cashback-filter-item" data-category="Рестораны и кафе">
+          <div class="cashback-filter-left">
+            <div class="cashback-filter-icon">
+              <!-- твой PNG -->
+              <img src="icons/fastfood.png" alt="Фастфуд">
+            </div>
+            <div>
+              <div class="cashback-filter-title">5% Фастфуд</div>
+              <div class="cashback-filter-subtitle">Для молодежи</div>
+            </div>
+          </div>
+          <div class="cashback-filter-radio">
+            <div class="cashback-filter-radio-inner"></div>
+          </div>
+        </div>
+
+        <div class="cashback-filter-item" data-category="Спорттовары">
+          <div class="cashback-filter-left">
+            <div class="cashback-filter-icon">
+              <img src="icons/sport.png" alt="Спортивные товары">
+            </div>
+            <div>
+              <div class="cashback-filter-title">5% Спортивные товары</div>
+              <div class="cashback-filter-subtitle">Экипировка и инвентарь</div>
+            </div>
+          </div>
+          <div class="cashback-filter-radio">
+            <div class="cashback-filter-radio-inner"></div>
+          </div>
+        </div>
+
+        <div class="cashback-filter-item" data-category="Развлечения">
+          <div class="cashback-filter-left">
+            <div class="cashback-filter-icon">
+              <img src="icons/active.png" alt="Активный отдых">
+            </div>
+            <div>
+              <div class="cashback-filter-title">5% Активный отдых</div>
+              <div class="cashback-filter-subtitle">Кино, парки, катки</div>
+            </div>
+          </div>
+          <div class="cashback-filter-radio">
+            <div class="cashback-filter-radio-inner"></div>
+          </div>
+        </div>
+
+        <div class="cashback-filter-footnote">
+          Еще одна категория будет доступна с Альфа-Смарт
         </div>
       </div>
     </div>
@@ -571,11 +756,20 @@ const categoriesFilters = [
 
 function initUI() {
   const tabsRow = document.querySelector(".tabs-row");
+  const cashbackTab = tabsRow.querySelector('[data-tab="cashback"]');
+
   tabsRow.querySelectorAll(".tab").forEach(tab => {
     tab.onclick = () => {
-      activeTab = tab.getAttribute("data-tab");
+      const key = tab.getAttribute("data-tab");
+      activeTab = key;
+
       tabsRow.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
       tab.classList.add("active");
+
+      if (key === "cashback") {
+        openCashbackSheet();
+      }
+      // "Рядом с вами" на MVP отдельной логики не имеет
     };
   });
 
@@ -598,6 +792,15 @@ function initUI() {
   document.querySelector("#detailClose").onclick = hideDetail;
 
   document.querySelector("#bannerRain").onclick = toggleHeatMode;
+
+  /* bottom-sheet события */
+  document.getElementById("cashbackSheetClose").onclick = closeCashbackSheet;
+
+  document.querySelectorAll(".cashback-filter-item").forEach(item => {
+    item.addEventListener("click", () => {
+      applyCashbackFilter(item);
+    });
+  });
 }
 
 function renderCategoryChips() {
@@ -619,6 +822,33 @@ function renderCategoryChips() {
     };
     row.appendChild(chip);
   });
+}
+
+/* ========= CASHBACK SHEET LOGIC ========= */
+
+function openCashbackSheet() {
+  const sheet = document.getElementById("cashbackSheetBackdrop");
+  sheet.style.display = "flex";
+}
+
+function closeCashbackSheet() {
+  const sheet = document.getElementById("cashbackSheetBackdrop");
+  sheet.style.display = "none";
+}
+
+function applyCashbackFilter(itemEl) {
+  // визуально отмечаем
+  document.querySelectorAll(".cashback-filter-item")
+    .forEach(i => i.classList.remove("active"));
+  itemEl.classList.add("active");
+
+  const cat = itemEl.getAttribute("data-category");
+  activeCategory = cat;
+
+  renderCategoryChips();
+  rebuildMarkers();
+  buildGuide();
+  closeCashbackSheet();
 }
 
 /* ========= MARKERS / HEAT ========= */
