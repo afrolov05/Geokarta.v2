@@ -1,3 +1,6 @@
+from textwrap import dedent
+
+html_content = dedent("""\
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -537,6 +540,24 @@
   <div id="map"></div>
 
   <button id="btnLocate" class="btn-locate">📍</button>
+  <button id="btnBack" style="
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      z-index: 9999;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(6px);
+      color: white;
+      font-size: 20px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    ">←</button>
 
   <!-- BOTTOM UI -->
   <div class="bottom-panel">
@@ -798,7 +819,6 @@ function initUI() {
   document.querySelector("#btnLocate").onclick = () => locate();
 
   document.querySelector("#guidePlaceCard").onclick = (e) => {
-    // чтобы нажимая на галочку не открывать карточку
     if (e.target.id === "guideNextBtn") return;
     const p = guidePlaces[currentStepIndex];
     if (!p) return;
@@ -814,10 +834,11 @@ function initUI() {
   };
 
   document.querySelector("#detailClose").onclick = hideDetail;
-
   document.querySelector("#bannerRain").onclick = toggleHeatMode;
+  document.querySelector("#btnBack").onclick = () => {
+    if (heatMode) toggleHeatMode();
+  };
 
-  /* bottom-sheet события */
   document.getElementById("cashbackSheetClose").onclick = closeCashbackSheet;
 
   document.querySelectorAll(".cashback-filter-item").forEach(item => {
@@ -940,33 +961,48 @@ function toggleHeatMode() {
   heatMode = !heatMode;
 
   const stepsEl = document.querySelector("#guideSteps");
+  const tabsRow = document.querySelector(".tabs-row");
+  const searchRow = document.querySelector(".search-row");
+  const catRow = document.querySelector("#categoriesRow");
+  const banner = document.querySelector("#bannerRain");
   const guideCard = document.querySelector("#guideCard");
   const placeCard = document.querySelector("#guidePlaceCard");
+  const backBtn = document.querySelector("#btnBack");
+  const titleEl = document.querySelector("#guideTitle");
+  const subEl = document.querySelector("#guideSubtitle");
 
   if (heatMode) {
     map.addLayer(heatLayer);
     markersLayer.clearLayers();
 
+    tabsRow.style.display = "none";
+    searchRow.style.display = "none";
+    catRow.style.display = "none";
+    banner.style.display = "none";
+
+    guideCard.style.display = "block";
+    placeCard.style.display = "none";
+
     if (stepsEl) stepsEl.style.display = "none";
 
-    guideCard.style.padding = "16px";
-    guideCard.style.borderRadius = "20px";
+    backBtn.style.display = "flex";
 
-    document.querySelector("#guideTitle").textContent =
-      "Средний кэшбэк по районам";
-    document.querySelector("#guideSubtitle").textContent =
-      "Кликай по кругам на карте, чтобы посмотреть средний кэшбэк.";
-
-    placeCard.style.display = "none";
+    titleEl.textContent = "Средний кэшбэк по районам";
+    subEl.textContent = "Кликай по кругам на карте, чтобы посмотреть средний кэшбэк.";
   } else {
     map.removeLayer(heatLayer);
 
-    if (stepsEl) stepsEl.style.display = "flex";
+    tabsRow.style.display = "flex";
+    searchRow.style.display = "flex";
+    catRow.style.display = "flex";
+    banner.style.display = "flex";
 
+    guideCard.style.display = "block";
     placeCard.style.display = "flex";
 
-    guideCard.style.padding = "12px 14px";
-    guideCard.style.borderRadius = "var(--radius-xl)";
+    if (stepsEl) stepsEl.style.display = "flex";
+
+    backBtn.style.display = "none";
 
     rebuildMarkers();
     buildGuide();
@@ -981,7 +1017,6 @@ function buildGuide() {
   const baseLat = userPosition ? userPosition.lat : 55.75;
   const baseLon = userPosition ? userPosition.lon : 37.62;
 
-  // гид всегда только по ресторанам и кафе
   const filtered = allPlaces
     .filter(p => p.category === "Рестораны и кафе")
     .map(p => ({
@@ -1038,7 +1073,6 @@ function renderGuide() {
   document.querySelector("#placeDistance").textContent = distFmt(p.dist);
   document.querySelector("#placeAvgCheck").textContent = `~${p.avgCheck} ₽`;
 
-  // скрываем галочку на последнем шаге
   if (currentStepIndex === guidePlaces.length - 1) {
     nextBtn.style.display = "none";
   } else {
@@ -1101,3 +1135,9 @@ function locate() {
 
 </body>
 </html>
+""")
+
+with open("/mnt/data/index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+"/mnt/data/index.html"
