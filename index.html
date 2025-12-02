@@ -28,10 +28,6 @@
       --accent-orange: #ff9f30;
       --accent-lime: #29d9a6;
       --accent-purple: #7c5cff;
-
-      --near-fastfood: #db5f5f;
-      --near-sport: #3b9b63;
-      --near-active: #3b6fb7;
     }
 
     * {
@@ -96,6 +92,47 @@
     .bottom-inner {
       pointer-events: auto;
     }
+
+    /* MAIN UI (табы, поиск, фильтры, гид) */
+    #mainUI {
+      display: block;
+    }
+
+    /* HEAT UI (средний кэшбэк по районам) */
+    #heatUI {
+      display: none;
+      background: var(--bg-card);
+      border-radius: 22px;
+      padding: 14px 16px 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .heat-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .heat-back {
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px 6px 4px 0;
+    }
+
+    .heat-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .heat-subtitle {
+      font-size: 12px;
+      color: var(--txt-muted);
+      margin-bottom: 2px;
+      margin-left: 28px;
+    }
+
+    /* tabs */
 
     .tabs-row {
       display: flex;
@@ -230,14 +267,14 @@
     .guide-subtitle {
       font-size: 12px;
       color: var(--txt-muted);
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .guide-steps {
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .step {
@@ -442,10 +479,22 @@
       overflow-y: auto;
     }
 
+    .nearby-title-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 6px;
+    }
+
+    .nearby-back {
+      font-size: 20px;
+      cursor: pointer;
+      padding-right: 4px;
+    }
+
     .nearby-title {
       font-size: 18px;
       font-weight: 700;
-      margin-bottom: 10px;
     }
 
     .nearby-item {
@@ -500,72 +549,78 @@
 
   <!-- PANEL: NEARBY LIST -->
   <div class="nearby-panel" id="nearbyPanel">
-    <!-- Кнопка назад -->
-    <div id="nearbyBackBtn" style="
-      display:flex;
-      align-items:center;
-      gap:6px;
-      margin-bottom:10px;
-      font-size:14px;
-      font-weight:600;
-      cursor:pointer;
-      color:white;
-    ">
-      <span style="font-size:18px;">←</span> Назад
+    <div class="nearby-title-row">
+      <div class="nearby-back" id="nearbyBackBtn">←</div>
+      <div class="nearby-title">Рядом с вами</div>
     </div>
-
-    <div class="nearby-title">В радиусе 3 км</div>
+    <div style="font-size:12px;color:#c4c4d0;margin-bottom:8px;">
+      Места в радиусе 3 км от вашего местоположения
+    </div>
     <div id="nearbyList"></div>
   </div>
 
-  <!-- BOTTOM MAIN PANEL -->
+  <!-- BOTTOM PANEL -->
   <div class="bottom-panel">
     <div class="bottom-inner">
 
-      <!-- TABS -->
-      <div class="tabs-row">
-        <div class="tab active" data-tab="cashback">Ваш кэшбэк</div>
-        <div class="tab" data-tab="nearby">Рядом с вами</div>
-      </div>
+      <!-- MAIN UI (табы, поиск, фильтры, гид) -->
+      <div id="mainUI">
+        <!-- TABS -->
+        <div class="tabs-row">
+          <div class="tab active" data-tab="cashback">Ваш кэшбэк</div>
+          <div class="tab" data-tab="nearby">Рядом с вами</div>
+        </div>
 
-      <!-- SEARCH -->
-      <div class="search-row" id="searchRow">
-        <span>🔍</span>
-        <input id="searchInput" placeholder="Поиск">
-      </div>
+        <!-- SEARCH -->
+        <div class="search-row" id="searchRow">
+          <span>🔍</span>
+          <input id="searchInput" placeholder="Поиск">
+        </div>
 
-      <!-- CATEGORY CHIPS -->
-      <div class="categories-row" id="categoriesRow"></div>
+        <!-- CATEGORY CHIPS -->
+        <div class="categories-row" id="categoriesRow"></div>
 
-      <!-- RAIN BANNER -->
-      <div class="banner" id="bannerRain">
-        <div style="display:flex;align-items:flex-start;">
-          <div class="banner-icon">💧</div>
-          <div>
-            <div class="banner-title">Ожидаются осадки в виде кэшбэка</div>
-            <div class="banner-text">Нажмите, чтобы посмотреть средний кэшбэк по районам</div>
+        <!-- RAIN BANNER -->
+        <div class="banner" id="bannerRain">
+          <div style="display:flex;align-items:flex-start;">
+            <div class="banner-icon">💧</div>
+            <div>
+              <div class="banner-title">Ожидаются осадки в виде кэшбэка</div>
+              <div class="banner-text">Нажмите, чтобы посмотреть средний кэшбэк по районам</div>
+            </div>
+          </div>
+          <div class="banner-arrow">›</div>
+        </div>
+
+        <!-- GUIDE -->
+        <div class="card-guide" id="guideCard">
+          <div class="guide-title" id="guideTitle">Гид по району</div>
+          <div class="guide-subtitle" id="guideSubtitle"></div>
+
+          <div class="guide-steps" id="guideSteps"></div>
+
+          <div class="guide-place-card" id="guidePlaceCard">
+            <div class="guide-place-main">
+              <div class="guide-place-name" id="placeName"></div>
+              <div class="guide-place-address" id="placeAddress"></div>
+            </div>
+            <div class="guide-place-meta">
+              <div class="tag" id="placeCategory"></div>
+              <div id="placeDistance"></div>
+              <div id="placeAvgCheck"></div>
+            </div>
           </div>
         </div>
-        <div class="banner-arrow">›</div>
       </div>
 
-      <!-- GUIDE -->
-      <div class="card-guide" id="guideCard">
-        <div class="guide-steps" id="guideSteps"></div>
-
-        <div class="guide-title" id="guideTitle">Гид по району</div>
-        <div class="guide-subtitle" id="guideSubtitle"></div>
-
-        <div class="guide-place-card" id="guidePlaceCard">
-          <div class="guide-place-main">
-            <div class="guide-place-name" id="placeName"></div>
-            <div class="guide-place-address" id="placeAddress"></div>
-          </div>
-          <div class="guide-place-meta">
-            <div class="tag" id="placeCategory"></div>
-            <div id="placeDistance"></div>
-            <div id="placeAvgCheck"></div>
-          </div>
+      <!-- HEAT UI (средний кэшбэк по районам) -->
+      <div id="heatUI">
+        <div class="heat-header">
+          <div class="heat-back" id="heatBackBtn">←</div>
+          <div class="heat-title">Средний кэшбэк по районам</div>
+        </div>
+        <div class="heat-subtitle">
+          Кликай по кругам на карте, чтобы посмотреть средний кэшбэк.
         </div>
       </div>
 
@@ -600,14 +655,184 @@
 </div>
 
 <script>
+/* ========= ДАННЫЕ ВНУТРИ ФАЙЛА ========= */
+
+const ALL_PLACES = [
+  {"id":1,"brand":"Шоколадница","name":"Шоколадница","category":"Рестораны и кафе","lat":55.74719,"lon":37.65403,"address":"Москва, адрес 1","avgCheck":850,"cashback":5},
+  {"id":2,"brand":"ВелоСтрана","name":"ВелоСтрана","category":"Спорттовары","lat":55.84441,"lon":37.70526,"address":"Москва, адрес 2","avgCheck":7000,"cashback":5},
+  {"id":3,"brand":"Формула Кино","name":"Формула Кино","category":"Развлечения","lat":55.83721,"lon":37.77184,"address":"Москва, адрес 3","avgCheck":600,"cashback":4},
+  {"id":4,"brand":"Shell","name":"Shell","category":"АЗС","lat":55.96685,"lon":37.50194,"address":"Москва, адрес 4","avgCheck":2020,"cashback":3},
+  {"id":5,"brand":"Синема Парк","name":"Синема Парк","category":"Развлечения","lat":55.94202,"lon":37.41482,"address":"Москва, адрес 5","avgCheck":700,"cashback":6},
+  {"id":6,"brand":"Спортмастер","name":"Спортмастер","category":"Спорттовары","lat":55.67523,"lon":37.82164,"address":"Москва, адрес 6","avgCheck":4000,"cashback":4},
+  {"id":7,"brand":"Синема Парк","name":"Синема Парк","category":"Развлечения","lat":55.92658,"lon":37.89349,"address":"Москва, адрес 7","avgCheck":700,"cashback":3},
+  {"id":8,"brand":"KFC","name":"KFC","category":"Рестораны и кафе","lat":55.99122,"lon":37.41623,"address":"Москва, адрес 8","avgCheck":600,"cashback":5},
+  {"id":9,"brand":"KFC","name":"KFC","category":"Рестораны и кафе","lat":55.60972,"lon":37.51596,"address":"Москва, адрес 9","avgCheck":600,"cashback":6},
+  {"id":10,"brand":"Спорт Депо","name":"Спорт Депо","category":"Спорттовары","lat":55.87062,"lon":37.84756,"address":"Москва, адрес 10","avgCheck":3800,"cashback":4},
+  {"id":11,"brand":"Лукойл","name":"Лукойл","category":"АЗС","lat":55.75208,"lon":37.59299,"address":"Москва, адрес 11","avgCheck":2020,"cashback":6},
+  {"id":12,"brand":"Starbucks","name":"Starbucks","category":"Рестораны и кафе","lat":55.77379,"lon":37.40717,"address":"Москва, адрес 12","avgCheck":450,"cashback":6},
+  {"id":13,"brand":"Газпромнефть","name":"Газпромнефть","category":"АЗС","lat":55.78834,"lon":37.72705,"address":"Москва, адрес 13","avgCheck":2020,"cashback":7},
+  {"id":14,"brand":"Центральный Детский Мир","name":"Центральный Детский Мир","category":"Развлечения","lat":55.80784,"lon":37.43366,"address":"Москва, адрес 14","avgCheck":1500,"cashback":6},
+  {"id":15,"brand":"Лукойл","name":"Лукойл","category":"АЗС","lat":55.6194,"lon":37.44418,"address":"Москва, адрес 15","avgCheck":2020,"cashback":3},
+  {"id":16,"brand":"Центральный Детский Мир","name":"Центральный Детский Мир","category":"Развлечения","lat":55.69541,"lon":37.67718,"address":"Москва, адрес 16","avgCheck":1500,"cashback":4},
+  {"id":17,"brand":"Кант","name":"Кант","category":"Спорттовары","lat":55.88459,"lon":37.65297,"address":"Москва, адрес 17","avgCheck":4500,"cashback":5},
+  {"id":18,"brand":"Газпромнефть","name":"Газпромнефть","category":"АЗС","lat":55.90606,"lon":37.79985,"address":"Москва, адрес 18","avgCheck":2020,"cashback":4},
+  {"id":19,"brand":"Спортмастер","name":"Спортмастер","category":"Спорттовары","lat":55.78094,"lon":37.7217,"address":"Москва, адрес 19","avgCheck":4000,"cashback":7},
+  {"id":20,"brand":"Burger King","name":"Burger King","category":"Рестораны и кафе","lat":55.76862,"lon":37.58325,"address":"Москва, адрес 20","avgCheck":650,"cashback":7},
+  {"id":21,"brand":"Мосгорпарк","name":"Мосгорпарк","category":"Развлечения","lat":55.74219,"lon":37.68789,"address":"Москва, адрес 21","avgCheck":500,"cashback":4},
+  {"id":22,"brand":"Shell","name":"Shell","category":"АЗС","lat":55.89621,"lon":37.81064,"address":"Москва, адрес 22","avgCheck":2020,"cashback":6},
+  {"id":23,"brand":"Газпромнефть","name":"Газпромнефть","category":"АЗС","lat":55.71096,"lon":37.6288,"address":"Москва, адрес 23","avgCheck":2020,"cashback":6},
+  {"id":24,"brand":"Центральный Детский Мир","name":"Центральный Детский Мир","category":"Развлечения","lat":55.88279,"lon":37.7872,"address":"Москва, адрес 24","avgCheck":1500,"cashback":5},
+  {"id":25,"brand":"Альма","name":"Альма","category":"Рестораны и кафе","lat":55.8595,"lon":37.56764,"address":"Москва, адрес 25","avgCheck":2200,"cashback":5},
+  {"id":26,"brand":"KFC","name":"KFC","category":"Рестораны и кафе","lat":55.60546,"lon":37.55133,"address":"Москва, адрес 26","avgCheck":600,"cashback":7},
+  {"id":27,"brand":"Центральный Детский Мир","name":"Центральный Детский Мир","category":"Развлечения","lat":55.91827,"lon":37.58791,"address":"Москва, адрес 27","avgCheck":1500,"cashback":6},
+  {"id":28,"brand":"Burger King","name":"Burger King","category":"Рестораны и кафе","lat":55.88956,"lon":37.83997,"address":"Москва, адрес 28","avgCheck":650,"cashback":5},
+  {"id":29,"brand":"Мосгорпарк","name":"Мосгорпарк","category":"Развлечения","lat":55.62848,"lon":37.55766,"address":"Москва, адрес 29","avgCheck":500,"cashback":4},
+  {"id":30,"brand":"ЕКА","name":"ЕКА","category":"АЗС","lat":55.9075,"lon":37.40787,"address":"Москва, адрес 30","avgCheck":2020,"cashback":3},
+  {"id":31,"brand":"ВелоСтрана","name":"ВелоСтрана","category":"Спорттовары","lat":55.9347,"lon":37.87501,"address":"Москва, адрес 31","avgCheck":7000,"cashback":7},
+  {"id":32,"brand":"Мосгорпарк","name":"Мосгорпарк","category":"Развлечения","lat":55.88218,"lon":37.46162,"address":"Москва, адрес 32","avgCheck":500,"cashback":6},
+  {"id":33,"brand":"Лукойл","name":"Лукойл","category":"АЗС","lat":55.91485,"lon":37.57279,"address":"Москва, адрес 33","avgCheck":2020,"cashback":7},
+  {"id":34,"brand":"Лукойл","name":"Лукойл","category":"АЗС","lat":55.98158,"lon":37.7881,"address":"Москва, адрес 34","avgCheck":2020,"cashback":7},
+  {"id":35,"brand":"Центральный Детский Мир","name":"Центральный Детский Мир","category":"Развлечения","lat":55.79953,"lon":37.68671,"address":"Москва, адрес 35","avgCheck":1500,"cashback":7},
+  {"id":36,"brand":"Спортмастер","name":"Спортмастер","category":"Спорттовары","lat":55.66692,"lon":37.5454,"address":"Москва, адрес 36","avgCheck":4000,"cashback":7},
+  {"id":37,"brand":"KFC","name":"KFC","category":"Рестораны и кафе","lat":55.77743,"lon":37.44569,"address":"Москва, адрес 37","avgCheck":600,"cashback":3},
+  {"id":38,"brand":"Лукойл","name":"Лукойл","category":"АЗС","lat":55.66665,"lon":37.80496,"address":"Москва, адрес 38","avgCheck":2020,"cashback":5},
+  {"id":39,"brand":"Шоколадница","name":"Шоколадница","category":"Рестораны и кафе","lat":55.85811,"lon":37.55484,"address":"Москва, адрес 39","avgCheck":850,"cashback":3},
+  {"id":40,"brand":"Газпромнефть","name":"Газпромнефть","category":"АЗС","lat":55.67211,"lon":37.84365,"address":"Москва, адрес 40","avgCheck":2020,"cashback":4},
+  {"id":41,"brand":"Osteria Mario","name":"Osteria Mario","category":"Рестораны и кафе","lat":55.64138,"lon":37.88375,"address":"Москва, адрес 41","avgCheck":1800,"cashback":3},
+  {"id":42,"brand":"Газпромнефть","name":"Газпромнефть","category":"АЗС","lat":55.96711,"lon":37.6192,"address":"Москва, адрес 42","avgCheck":2020,"cashback":7},
+  {"id":43,"brand":"Каток ВДНХ","name":"Каток ВДНХ","category":"Развлечения","lat":55.86432,"lon":37.41067,"address":"Москва, адрес 43","avgCheck":900,"cashback":5},
+  {"id":44,"brand":"Спорт Депо","name":"Спорт Депо","category":"Спорттовары","lat":55.6623,"lon":37.78642,"address":"Москва, адрес 44","avgCheck":3800,"cashback":7},
+  {"id":45,"brand":"Центральный Детский Мир","name":"Центральный Детский Мир","category":"Развлечения","lat":55.66237,"lon":37.74488,"address":"Москва, адрес 45","avgCheck":1500,"cashback":6},
+  {"id":46,"brand":"ЕКА","name":"ЕКА","category":"АЗС","lat":55.89744,"lon":37.71757,"address":"Москва, адрес 46","avgCheck":2020,"cashback":6},
+  {"id":47,"brand":"ВелоСтрана","name":"ВелоСтрана","category":"Спорттовары","lat":55.9636,"lon":37.67741,"address":"Москва, адрес 47","avgCheck":7000,"cashback":6},
+  {"id":48,"brand":"Триал-Спорт","name":"Триал-Спорт","category":"Спорттовары","lat":55.95819,"lon":37.57506,"address":"Москва, адрес 48","avgCheck":5000,"cashback":4},
+  {"id":49,"brand":"Кант","name":"Кант","category":"Спорттовары","lat":55.87406,"lon":37.42707,"address":"Москва, адрес 49","avgCheck":4500,"cashback":7},
+  {"id":50,"brand":"Каток ВДНХ","name":"Каток ВДНХ","category":"Развлечения","lat":55.96744,"lon":37.6843,"address":"Москва, адрес 50","avgCheck":900,"cashback":6},
+  {"id":51,"brand":"Центральный Детский Мир","name":"Центральный Детский Мир","category":"Развлечения","lat":55.66114,"lon":37.48603,"address":"Москва, адрес 51","avgCheck":1500,"cashback":4},
+  {"id":52,"brand":"ВелоСтрана","name":"ВелоСтрана","category":"Спорттовары","lat":55.62792,"lon":37.74085,"address":"Москва, адрес 52","avgCheck":7000,"cashback":6},
+  {"id":53,"brand":"Спорт Депо","name":"Спорт Депо","category":"Спорттовары","lat":55.66107,"lon":37.64891,"address":"Москва, адрес 53","avgCheck":3800,"cashback":3},
+  {"id":54,"brand":"ЕКА","name":"ЕКА","category":"АЗС","lat":55.98639,"lon":37.84944,"address":"Москва, адрес 54","avgCheck":2020,"cashback":7},
+  {"id":55,"brand":"Альма","name":"Альма","category":"Рестораны и кафе","lat":55.87177,"lon":37.52972,"address":"Москва, адрес 55","avgCheck":2200,"cashback":7},
+  {"id":56,"brand":"Альма","name":"Альма","category":"Рестораны и кафе","lat":55.76765,"lon":37.58265,"address":"Москва, адрес 56","avgCheck":2200,"cashback":5},
+  {"id":57,"brand":"Газпромнефть","name":"Газпромнефть","category":"АЗС","lat":55.9221,"lon":37.85748,"address":"Москва, адрес 57","avgCheck":2020,"cashback":6},
+  {"id":58,"brand":"Газпромнефть","name":"Газпромнефть","category":"АЗС","lat":55.6867,"lon":37.45049,"address":"Москва, адрес 58","avgCheck":2020,"cashback":5},
+  {"id":59,"brand":"KFC","name":"KFC","category":"Рестораны и кафе","lat":55.99612,"lon":37.71737,"address":"Москва, адрес 59","avgCheck":600,"cashback":4},
+  {"id":60,"brand":"Каро","name":"Каро","category":"Развлечения","lat":55.93482,"lon":37.66965,"address":"Москва, адрес 60","avgCheck":650,"cashback":7},
+  {"id":61,"brand":"Каток ВДНХ","name":"Каток ВДНХ","category":"Развлечения","lat":55.83058,"lon":37.58464,"address":"Москва, адрес 61","avgCheck":900,"cashback":3},
+  {"id":62,"brand":"Osteria Mario","name":"Osteria Mario","category":"Рестораны и кафе","lat":55.92936,"lon":37.82846,"address":"Москва, адрес 62","avgCheck":1800,"cashback":7},
+  {"id":63,"brand":"Starbucks","name":"Starbucks","category":"Рестораны и кафе","lat":55.63447,"lon":37.47159,"address":"Москва, адрес 63","avgCheck":450,"cashback":6},
+  {"id":64,"brand":"Кант","name":"Кант","category":"Спорттовары","lat":55.73813,"lon":37.74014,"address":"Москва, адрес 64","avgCheck":4500,"cashback":4},
+  {"id":65,"brand":"Кант","name":"Кант","category":"Спорттовары","lat":55.70989,"lon":37.74994,"address":"Москва, адрес 65","avgCheck":4500,"cashback":6},
+  {"id":66,"brand":"Osteria Mario","name":"Osteria Mario","category":"Рестораны и кафе","lat":55.66515,"lon":37.61403,"address":"Москва, адрес 66","avgCheck":1800,"cashback":6},
+  {"id":67,"brand":"Forward","name":"Forward","category":"Спорттовары","lat":55.89249,"lon":37.49413,"address":"Москва, адрес 67","avgCheck":3500,"cashback":4},
+  {"id":68,"brand":"Каток ВДНХ","name":"Каток ВДНХ","category":"Развлечения","lat":55.95664,"lon":37.68834,"address":"Москва, адрес 68","avgCheck":900,"cashback":5},
+  {"id":69,"brand":"Каток ВДНХ","name":"Каток ВДНХ","category":"Развлечения","lat":55.91336,"lon":37.82298,"address":"Москва, адрес 69","avgCheck":900,"cashback":3},
+  {"id":70,"brand":"Osteria Mario","name":"Osteria Mario","category":"Рестораны и кафе","lat":55.83,"lon":37.60257,"address":"Москва, адрес 70","avgCheck":1800,"cashback":6},
+  {"id":71,"brand":"Starbucks","name":"Starbucks","category":"Рестораны и кафе","lat":55.89733,"lon":37.71447,"address":"Москва, адрес 71","avgCheck":450,"cashback":4},
+  {"id":72,"brand":"Формула Кино","name":"Формула Кино","category":"Развлечения","lat":55.65764,"lon":37.57901,"address":"Москва, адрес 72","avgCheck":600,"cashback":6},
+  {"id":73,"brand":"Forward","name":"Forward","category":"Спорттовары","lat":55.97514,"lon":37.71518,"address":"Москва, адрес 73","avgCheck":3500,"cashback":4},
+  {"id":74,"brand":"Триал-Спорт","name":"Триал-Спорт","category":"Спорттовары","lat":55.91325,"lon":37.60669,"address":"Москва, адрес 74","avgCheck":5000,"cashback":5},
+  {"id":75,"brand":"Кант","name":"Кант","category":"Спорттовары","lat":55.75663,"lon":37.48961,"address":"Москва, адрес 75","avgCheck":4500,"cashback":4},
+  {"id":76,"brand":"Каро","name":"Каро","category":"Развлечения","lat":55.60318,"lon":37.59298,"address":"Москва, адрес 76","avgCheck":650,"cashback":4},
+  {"id":77,"brand":"Shell","name":"Shell","category":"АЗС","lat":55.78222,"lon":37.88475,"address":"Москва, адрес 77","avgCheck":2020,"cashback":7},
+  {"id":78,"brand":"Спортмастер","name":"Спортмастер","category":"Спорттовары","lat":55.89318,"lon":37.89729,"address":"Москва, адрес 78","avgCheck":4000,"cashback":5},
+  {"id":79,"brand":"Триал-Спорт","name":"Триал-Спорт","category":"Спорттовары","lat":55.67947,"lon":37.68167,"address":"Москва, адрес 79","avgCheck":5000,"cashback":3},
+  {"id":80,"brand":"Альма","name":"Альма","category":"Рестораны и кафе","lat":55.91155,"lon":37.53912,"address":"Москва, адрес 80","avgCheck":2200,"cashback":7},
+  {"id":81,"brand":"Спортмастер","name":"Спортмастер","category":"Спорттовары","lat":55.74739,"lon":37.83887,"address":"Москва, адрес 81","avgCheck":4000,"cashback":7},
+  {"id":82,"brand":"Формула Кино","name":"Формула Кино","category":"Развлечения","lat":55.67556,"lon":37.41928,"address":"Москва, адрес 82","avgCheck":600,"cashback":6},
+  {"id":83,"brand":"Спорт Депо","name":"Спорт Депо","category":"Спорттовары","lat":55.67474,"lon":37.44509,"address":"Москва, адрес 83","avgCheck":3800,"cashback":5},
+  {"id":84,"brand":"Триал-Спорт","name":"Триал-Спорт","category":"Спорттовары","lat":55.62084,"lon":37.5285,"address":"Москва, адрес 84","avgCheck":5000,"cashback":5},
+  {"id":85,"brand":"Shell","name":"Shell","category":"АЗС","lat":55.7035,"lon":37.58098,"address":"Москва, адрес 85","avgCheck":2020,"cashback":5},
+  {"id":86,"brand":"Спортмастер","name":"Спортмастер","category":"Спорттовары","lat":55.65146,"lon":37.51393,"address":"Москва, адрес 86","avgCheck":4000,"cashback":4},
+  {"id":87,"brand":"Кант","name":"Кант","category":"Спорттовары","lat":55.74927,"lon":37.75269,"address":"Москва, адрес 87","avgCheck":4500,"cashback":6},
+  {"id":88,"brand":"Газпромнефть","name":"Газпромнефть","category":"АЗС","lat":55.90906,"lon":37.48564,"address":"Москва, адрес 88","avgCheck":2020,"cashback":7},
+  {"id":89,"brand":"Формула Кино","name":"Формула Кино","category":"Развлечения","lat":55.64748,"lon":37.84061,"address":"Москва, адрес 89","avgCheck":600,"cashback":5},
+  {"id":90,"brand":"Каро","name":"Каро","category":"Развлечения","lat":55.96501,"lon":37.57965,"address":"Москва, адрес 90","avgCheck":650,"cashback":3},
+  {"id":91,"brand":"Формула Кино","name":"Формула Кино","category":"Развлечения","lat":55.86941,"lon":37.44329,"address":"Москва, адрес 91","avgCheck":600,"cashback":7},
+  {"id":92,"brand":"KFC","name":"KFC","category":"Рестораны и кафе","lat":55.75034,"lon":37.80946,"address":"Москва, адрес 92","avgCheck":600,"cashback":3},
+  {"id":93,"brand":"Спортмастер","name":"Спортмастер","category":"Спорттовары","lat":55.77895,"lon":37.66571,"address":"Москва, адрес 93","avgCheck":4000,"cashback":6},
+  {"id":94,"brand":"Кант","name":"Кант","category":"Спорттовары","lat":55.95515,"lon":37.68849,"address":"Москва, адрес 94","avgCheck":4500,"cashback":5},
+  {"id":95,"brand":"Лукойл","name":"Лукойл","category":"АЗС","lat":55.91268,"lon":37.44999,"address":"Москва, адрес 95","avgCheck":2020,"cashback":7},
+  {"id":96,"brand":"Синема Парк","name":"Синема Парк","category":"Развлечения","lat":55.75343,"lon":37.72382,"address":"Москва, адрес 96","avgCheck":700,"cashback":6},
+  {"id":97,"brand":"Газпромнефть","name":"Газпромнефть","category":"АЗС","lat":55.70452,"lon":37.48292,"address":"Москва, адрес 97","avgCheck":2020,"cashback":7},
+  {"id":98,"brand":"KFC","name":"KFC","category":"Рестораны и кафе","lat":55.66602,"lon":37.84776,"address":"Москва, адрес 98","avgCheck":600,"cashback":4},
+  {"id":99,"brand":"Центральный Детский Мир","name":"Центральный Детский Мир","category":"Развлечения","lat":55.92797,"lon":37.76096,"address":"Москва, адрес 99","avgCheck":1500,"cashback":4},
+  {"id":100,"brand":"Каток ВДНХ","name":"Каток ВДНХ","category":"Развлечения","lat":55.94378,"lon":37.47177,"address":"Москва, адрес 100","avgCheck":900,"cashback":3}
+];
+
+const BRAND_LOGOS = {
+  "Лукойл": "logos/лукойл.png",
+  "Газпромнефть": "logos/газпромнефть.png",
+  "ЕКА": "logos/ека.png",
+  "Татнефть": "logos/татнефть.png",
+
+  "Шоколадница": "logos/шоколадница.png",
+  "Му-Му": "logos/муму.png",
+  "Osteria Mario": "logos/osteria.png",
+  "Альма": "logos/alma.png",
+  "KFC": "logos/kfc.png",
+  "Burger King": "logos/bk.png",
+  "Starbucks": "logos/starbucks.png",
+
+  "Спортмастер": "logos/спортмастер.png",
+  "Триал-Спорт": "logos/триалспорт.png",
+  "ВелоСтрана": "logos/велострана.png",
+  "Кант": "logos/кант.png",
+  "Forward": "logos/forward.png",
+  "Спорт Депо": "logos/спортдепо.png",
+
+  "Формула Кино": "logos/формулакино.png",
+  "Каро": "logos/каро.png",
+  "Синема Парк": "logos/синемапарк.png",
+  "Центральный Детский Мир": "logos/цдм.png",
+  "Каток ВДНХ": "logos/катоквднх.png",
+  "Мосгорпарк": "logos/мосгорпарк.png"
+};
+
+const AVERAGE_ZONES = [
+  {"name":"ЦАО — Тверской","lat":55.7652,"lon":37.605,"value":38},
+  {"name":"ЦАО — Пресненский","lat":55.7601,"lon":37.5547,"value":36},
+  {"name":"ЦАО — Басманный","lat":55.7665,"lon":37.6806,"value":34},
+  {"name":"ЦАО — Таганский","lat":55.7323,"lon":37.6659,"value":33},
+  {"name":"САО — Беговой","lat":55.786,"lon":37.559,"value":37},
+  {"name":"САО — Хорошевский","lat":55.7771,"lon":37.5164,"value":31},
+  {"name":"САО — Савеловский","lat":55.792,"lon":37.5885,"value":32},
+  {"name":"САО — Тимирязевский","lat":55.8172,"lon":37.5688,"value":29},
+  {"name":"СВАО — Алексеевский","lat":55.8131,"lon":37.6443,"value":35},
+  {"name":"СВАО — Марьина роща","lat":55.7963,"lon":37.6168,"value":33},
+  {"name":"СВАО — Останкинский","lat":55.8207,"lon":37.6003,"value":27},
+  {"name":"СВАО — Медведково","lat":55.8646,"lon":37.6611,"value":24},
+  {"name":"ВАО — Сокольники","lat":55.7924,"lon":37.6802,"value":34},
+  {"name":"ВАО — Преображенское","lat":55.7968,"lon":37.7283,"value":30},
+  {"name":"ВАО — Новогиреево","lat":55.7511,"lon":37.8063,"value":26},
+  {"name":"ВАО — Измайлово","lat":55.7867,"lon":37.799,"value":29},
+  {"name":"ЮВАО — Текстильщики","lat":55.7084,"lon":37.7421,"value":28},
+  {"name":"ЮВАО — Рязанский","lat":55.718,"lon":37.7923,"value":27},
+  {"name":"ЮВАО — Люблино","lat":55.6774,"lon":37.753,"value":25},
+  {"name":"ЮВАО — Кузьминки","lat":55.7051,"lon":37.7657,"value":26},
+  {"name":"ЮАО — Даниловский","lat":55.705,"lon":37.6409,"value":31},
+  {"name":"ЮАО — Нагатино","lat":55.6838,"lon":37.6487,"value":29},
+  {"name":"ЮАО — Чертаново Северное","lat":55.6341,"lon":37.5867,"value":24},
+  {"name":"ЮАО — Бирюлево Восточное","lat":55.5883,"lon":37.6618,"value":22},
+  {"name":"ЮЗАО — Гагаринский","lat":55.6986,"lon":37.5432,"value":32},
+  {"name":"ЮЗАО — Коньково","lat":55.6336,"lon":37.517,"value":30},
+  {"name":"ЮЗАО — Теплый стан","lat":55.6181,"lon":37.5054,"value":28},
+  {"name":"ЮЗАО — Ясенево","lat":55.6058,"lon":37.5336,"value":27},
+  {"name":"ЗАО — Филевский парк","lat":55.7398,"lon":37.497,"value":33},
+  {"name":"ЗАО — Кунцево","lat":55.7313,"lon":37.4352,"value":29},
+  {"name":"ЗАО — Солнцево","lat":55.6524,"lon":37.4389,"value":26},
+  {"name":"ЗАО — Внуково","lat":55.6067,"lon":37.2834,"value":23}
+];
+
 /* ========= ГЛОБАЛЬНОЕ СОСТОЯНИЕ ========= */
 
-let allPlaces = [];
-let brandLogos = {};
-let averageZones = [];
+let allPlaces = ALL_PLACES.slice();
+let brandLogos = BRAND_LOGOS;
+let averageZones = AVERAGE_ZONES.slice();
 
 let activeCategory = "all";
 let activeTab = "cashback";
+let heatMode = false;
 
 let markersLayer = L.layerGroup();
 let heatLayer = L.layerGroup();
@@ -618,7 +843,6 @@ let userMarker = null;
 
 let guidePlaces = [];
 let currentStepIndex = 0;
-let heatMode = false;
 
 /* ========= ИНИЦИАЛИЗАЦИЯ КАРТЫ ========= */
 
@@ -659,27 +883,6 @@ function distFmt(km){
   return km.toFixed(1)+" км";
 }
 
-/* ========= ЗАГРУЗКА ДАННЫХ ========= */
-
-async function loadData() {
-  const [pointsRes, brandsRes, zonesRes] = await Promise.all([
-    fetch("points.json"),
-    fetch("brands.json"),
-    fetch("average-zones.json")
-  ]);
-
-  allPlaces = await pointsRes.json();
-  brandLogos = await brandsRes.json();
-  averageZones = await zonesRes.json();
-
-  initUI();
-  buildHeatLayer();
-  rebuildMarkers();
-  buildGuide();
-}
-
-loadData();
-
 /* ========= ИНИЦИАЛИЗАЦИЯ UI ========= */
 
 const categoriesFilters = [
@@ -691,23 +894,25 @@ const categoriesFilters = [
 ];
 
 function initUI() {
-  /* --- вкладки --- */
   const tabsRow = document.querySelector(".tabs-row");
+
+  // вкладки
   tabsRow.querySelectorAll(".tab").forEach(tab => {
     tab.onclick = () => {
       activeTab = tab.getAttribute("data-tab");
       tabsRow.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
       tab.classList.add("active");
 
-      // логика табов
       if (activeTab === "cashback") {
         hideNearbyList();
-        showGuide();
+        exitHeatMode(); // если были в среднем кэшбэке
+        showMainUI();
         rebuildMarkers();
+        buildGuide();
       }
 
       if (activeTab === "nearby") {
-        hideGuide();
+        exitHeatMode();
         showNearbyList();
       }
     };
@@ -715,42 +920,51 @@ function initUI() {
 
   renderCategoryChips();
 
-  /* поиск */
-  document.querySelector("#searchInput").addEventListener("input", () => {
+  // поиск
+  document.getElementById("searchInput").addEventListener("input", () => {
     rebuildMarkers();
     buildGuide();
   });
 
-  /* гео */
-  document.querySelector("#btnLocate").onclick = () => locate();
+  // гео
+  document.getElementById("btnLocate").onclick = () => locate();
 
-  document.querySelector("#detailClose").onclick = hideDetail;
-
-  /* гид-карточка */
-  document.querySelector("#guidePlaceCard").onclick = () => {
+  // гид-карточка
+  document.getElementById("guidePlaceCard").onclick = () => {
     const p = guidePlaces[currentStepIndex];
     if (!p) return;
     showDetail(p);
     map.flyTo([p.lat,p.lon],15,{duration:0.5});
   };
 
-  document.querySelector("#bannerRain").onclick = toggleHeatMode;
+  // закрыть детальную
+  document.getElementById("detailClose").onclick = hideDetail;
 
-  // кнопка назад в "Рядом с вами"
+  // баннер среднего кэшбэка
+  document.getElementById("bannerRain").onclick = enterHeatMode;
+  document.getElementById("heatBackBtn").onclick = exitHeatMode;
+
+  // назад из "Рядом с вами"
   document.getElementById("nearbyBackBtn").onclick = () => {
-    // возвращаемся на вкладку "Ваш кэшбэк"
     activeTab = "cashback";
     tabsRow.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     tabsRow.querySelector('[data-tab="cashback"]').classList.add("active");
     hideNearbyList();
-    showGuide();
+    showMainUI();
+    rebuildMarkers();
+    buildGuide();
   };
+
+  // стартовое состояние
+  buildHeatLayer();
+  rebuildMarkers();
+  buildGuide();
 }
 
 /* ========= КАТЕГОРИИ ========= */
 
 function renderCategoryChips() {
-  const row = document.querySelector("#categoriesRow");
+  const row = document.getElementById("categoriesRow");
   row.innerHTML = "";
   categoriesFilters.forEach(cf => {
     const chip = document.createElement("div");
@@ -776,7 +990,7 @@ function renderCategoryChips() {
 /* ========= ФИЛЬТРАЦИЯ ========= */
 
 function filterPlacesBasic() {
-  const q = document.querySelector("#searchInput").value.toLowerCase();
+  const q = document.getElementById("searchInput").value.toLowerCase();
   return allPlaces.filter(p => {
     const okCat = activeCategory === "all" || p.category === activeCategory;
     const okQ = !q || p.name.toLowerCase().includes(q);
@@ -839,28 +1053,32 @@ function buildHeatLayer() {
   });
 }
 
-function toggleHeatMode() {
-  heatMode = !heatMode;
+function enterHeatMode() {
+  if (heatMode) return;
+  heatMode = true;
 
-  if (heatMode) {
-    map.addLayer(heatLayer);
-    markersLayer.clearLayers();
+  map.addLayer(heatLayer);
+  markersLayer.clearLayers();
 
-    document.getElementById("guideTitle").textContent =
-      "Средний кэшбэк по районам";
-    document.getElementById("guideSubtitle").textContent =
-      "Кликай по кругам на карте, чтобы посмотреть средний кэшбэк.";
+  document.getElementById("mainUI").style.display = "none";
+  document.getElementById("heatUI").style.display = "block";
+}
 
-    document.getElementById("placeName").textContent = "";
-    document.getElementById("placeAddress").textContent = "";
-    document.getElementById("placeCategory").textContent = "";
-    document.getElementById("placeDistance").textContent = "";
-    document.getElementById("placeAvgCheck").textContent = "";
-  } else {
-    map.removeLayer(heatLayer);
-    rebuildMarkers();
-    buildGuide();
+function exitHeatMode() {
+  if (!heatMode) {
+    // просто убедимся, что UI в нормальном режиме
+    document.getElementById("heatUI").style.display = "none";
+    document.getElementById("mainUI").style.display = "block";
+    return;
   }
+  heatMode = false;
+
+  map.removeLayer(heatLayer);
+  document.getElementById("heatUI").style.display = "none";
+  document.getElementById("mainUI").style.display = "block";
+
+  rebuildMarkers();
+  buildGuide();
 }
 
 /*************** ГИД ПО РАЙОНУ (только рестораны) ***************/
@@ -891,6 +1109,18 @@ function renderGuide() {
 
   steps.innerHTML = "";
 
+  if (!guidePlaces.length) {
+    titleEl.textContent = "Гид по району";
+    subtitleEl.textContent =
+      "Включите геолокацию, чтобы мы показали рестораны рядом с вами.";
+    document.getElementById("placeName").textContent = "";
+    document.getElementById("placeAddress").textContent = "";
+    document.getElementById("placeCategory").textContent = "";
+    document.getElementById("placeDistance").textContent = "";
+    document.getElementById("placeAvgCheck").textContent = "";
+    return;
+  }
+
   guidePlaces.forEach((p, i) => {
     const s = document.createElement("div");
     s.className = "step" + (i === currentStepIndex ? " active" : "");
@@ -909,18 +1139,6 @@ function renderGuide() {
       steps.appendChild(line);
     }
   });
-
-  if (!guidePlaces.length) {
-    titleEl.textContent = "Гид по району";
-    subtitleEl.textContent =
-      "Включите геолокацию, чтобы мы показали рестораны рядом с вами.";
-    document.getElementById("placeName").textContent = "";
-    document.getElementById("placeAddress").textContent = "";
-    document.getElementById("placeCategory").textContent = "";
-    document.getElementById("placeDistance").textContent = "";
-    document.getElementById("placeAvgCheck").textContent = "";
-    return;
-  }
 
   const p = guidePlaces[currentStepIndex];
 
@@ -947,16 +1165,22 @@ function showGuide() {
 /*************** СПИСОК «РЯДОМ С ВАМИ» (3 КМ) ***************/
 
 function showNearbyList() {
+  hideGuide();
+
   const panel = document.getElementById("nearbyPanel");
   const listEl = document.getElementById("nearbyList");
   const searchRow = document.getElementById("searchRow");
   const catsRow = document.getElementById("categoriesRow");
   const banner = document.getElementById("bannerRain");
+  const mainUI = document.getElementById("mainUI");
 
   panel.style.display = "block";
   if (searchRow) searchRow.style.display = "none";
   if (catsRow) catsRow.style.display = "none";
   if (banner) banner.style.display = "none";
+
+  // табы оставляем, чтобы юзер понимал, где он
+  mainUI.style.display = "block";
 
   listEl.innerHTML = "";
 
@@ -978,7 +1202,7 @@ function showNearbyList() {
     empty.style.color = "#c4c4d0";
     empty.style.paddingTop = "4px";
     empty.textContent = userPosition
-      ? "Мы не нашли мест в радиусе 3 км. Попробуйте переместиться по карте или включить другой район."
+      ? "Мы не нашли мест в радиусе 3 км. Попробуйте переместиться по карте."
       : "Включите геолокацию, чтобы увидеть места рядом с вами.";
     listEl.appendChild(empty);
     return;
@@ -1031,6 +1255,15 @@ function hideNearbyList() {
   if (searchRow) searchRow.style.display = "flex";
   if (catsRow) catsRow.style.display = "flex";
   if (banner) banner.style.display = "flex";
+
+  showGuide();
+}
+
+/*************** MAIN UI VISIBILITY ***************/
+
+function showMainUI() {
+  document.getElementById("mainUI").style.display = "block";
+  document.getElementById("heatUI").style.display = "none";
 }
 
 /*************** ДЕТАЛЬНАЯ КАРТОЧКА ***************/
@@ -1098,8 +1331,10 @@ function locate() {
     }
   });
 }
+
+/* старт */
+initUI();
 </script>
 
 </body>
 </html>
-
