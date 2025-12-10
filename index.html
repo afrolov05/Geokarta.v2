@@ -1107,27 +1107,32 @@ function buildHeatLayer() {
 function toggleHeatMode(on) {
   heatMode = on;
 
+  const guidePlaceCard = document.querySelector("#guidePlaceCard");
+
   if (heatMode) {
     document.body.classList.add("heat-mode");
     map.addLayer(heatLayer);
     markersLayer.clearLayers();
 
-    // обновим гайд под режим
+    // текст для режима среднего кэшбэка
     document.querySelector("#guideTitle").textContent = "Средний кэшбэк по районам";
     document.querySelector("#guideSubtitle").textContent =
       "Кликай по кругам на карте, чтобы посмотреть средний кэшбэк.";
-    document.querySelector("#placeName").textContent = "";
-    document.querySelector("#placeAddress").textContent = "";
-    document.querySelector("#placeCategory").textContent = "";
-    document.querySelector("#placeDistance").textContent = "";
-    document.querySelector("#placeAvgCheck").textContent = "";
+
+    // скрываем карточку места, чтобы не было пустой серой плашки
+    if (guidePlaceCard) guidePlaceCard.style.display = "none";
   } else {
     document.body.classList.remove("heat-mode");
     map.removeLayer(heatLayer);
+
+    // возвращаем карточку места
+    if (guidePlaceCard) guidePlaceCard.style.display = "flex";
+
     rebuildMarkers();
     buildGuide();
   }
 }
+
 
 /* ========= GUIDE ========= */
 
